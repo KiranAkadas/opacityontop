@@ -5,11 +5,14 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -101,6 +104,7 @@ public class FullscreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen);
+        ColorPickerDialog.newBuilder();
 
         mVisible = true;
 //        mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -121,7 +125,7 @@ public class FullscreenActivity extends AppCompatActivity {
         mContentView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                
+
                 toggle();
                 return false;
             }

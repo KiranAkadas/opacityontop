@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+
 public class PixelGridView extends View {
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
@@ -21,6 +23,7 @@ public class PixelGridView extends View {
     public PixelGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        blackPaint.setColor(Color.BLACK);
     }
 
     public void setNumColumns(int numColumns) {
@@ -94,10 +97,11 @@ public class PixelGridView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int column = (int)(event.getX() / cellWidth);
-            int row = (int)(event.getY() / cellHeight);
+            int column = (int) (event.getX() / cellWidth);
+            int row = (int) (event.getY() / cellHeight);
 
             cellChecked[column][row] = !cellChecked[column][row];
+
             invalidate();
         }
 
