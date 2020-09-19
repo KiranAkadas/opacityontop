@@ -14,6 +14,11 @@ public class PixelGridView extends View {
     private int cellWidth, cellHeight;
     private Paint blackPaint = new Paint();
     private boolean[][] cellChecked;
+    private int colorPicked = 0;
+
+    public void setColorPicked(int colorPicked) {
+        this.colorPicked = colorPicked;
+    }
 
     public PixelGridView(Context context) {
         this(context, null);
@@ -77,6 +82,7 @@ public class PixelGridView extends View {
             for (int j = 0; j < numRows; j++) {
                 if (cellChecked[i][j]) {
 
+                    blackPaint.setColor(colorPicked);
                     canvas.drawRect(i * cellWidth, j * cellHeight,
                             (i + 1) * cellWidth, (j + 1) * cellHeight,
                             blackPaint);
@@ -103,7 +109,14 @@ public class PixelGridView extends View {
 
             invalidate();
         }
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            int column = (int) (event.getX() / cellWidth);
+            int row = (int) (event.getY() / cellHeight);
 
+            cellChecked[column][row] = !cellChecked[column][row];
+
+            invalidate();
+        }
         return true;
     }
 

@@ -1,12 +1,7 @@
 package com.bacloud.transparentruler;
 
 import android.annotation.SuppressLint;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,6 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
@@ -97,6 +95,7 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
                 case MotionEvent.ACTION_UP:
                     view.performClick();
                     break;
+
                 default:
                     break;
             }
@@ -104,6 +103,7 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         }
     };
     private static final int DIALOG_ID = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,8 +148,7 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         PixelGridView pixelGrid = new PixelGridView(this);
         pixelGrid.setNumColumns(4);
         pixelGrid.setNumRows(6);
-
-        linearLayout.addView(pixelGrid);
+        pixelGrid.invalidate();
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
@@ -211,6 +210,11 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
     @Override
     public void onColorSelected(int dialogId, int color) {
         Log.d(TAG, "onColorSelected() called with: dialogId = [" + dialogId + "], color = [" + color + "]");
+        PixelGridView pixelGrid = new PixelGridView(this);
+        pixelGrid.setNumColumns(4);
+        pixelGrid.setNumRows(6);
+        pixelGrid.setColorPicked(color);
+        linearLayout.addView(pixelGrid);
         switch (dialogId) {
             case DIALOG_ID:
                 // We got result from the dialog that is shown when clicking on the icon in the action bar.
