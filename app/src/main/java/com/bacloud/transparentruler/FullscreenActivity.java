@@ -6,19 +6,24 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
+public class FullscreenActivity extends AppCompatActivity implements ColorPickerDialogListener {
+    private static final String TAG = "FullscreenActivity";
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -98,13 +103,19 @@ public class FullscreenActivity extends AppCompatActivity {
             return false;
         }
     };
-
+    private static final int DIALOG_ID = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen);
-        ColorPickerDialog.newBuilder();
+        ColorPickerDialog.newBuilder()
+                .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
+                .setAllowPresets(false)
+                .setDialogId(DIALOG_ID)
+                .setColor(Color.BLACK)
+                .setShowAlphaSlider(true)
+                .show(this);
 
         mVisible = true;
 //        mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -195,5 +206,21 @@ public class FullscreenActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    public void onColorSelected(int dialogId, int color) {
+        Log.d(TAG, "onColorSelected() called with: dialogId = [" + dialogId + "], color = [" + color + "]");
+        switch (dialogId) {
+            case DIALOG_ID:
+                // We got result from the dialog that is shown when clicking on the icon in the action bar.
+                Toast.makeText(FullscreenActivity.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+        Log.d(TAG, "onDialogDismissed() called with: dialogId = [" + dialogId + "]");
     }
 }

@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 
 public class PixelGridView extends View {
     private int numColumns, numRows;
@@ -107,4 +106,6 @@ public class PixelGridView extends View {
 
         return true;
     }
+
+
 }
