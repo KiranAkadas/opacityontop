@@ -1,4 +1,4 @@
-package com.bacloud.transparentruler;
+package com.bacloud.opacityontop;
 
 import org.junit.Test;
 

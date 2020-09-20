@@ -1,4 +1,4 @@
-package com.bacloud.transparentruler;
+package com.bacloud.opacityontop;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -62,6 +63,7 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
     PixelGridView pixelGrid;
     int color;
     private View mContentView;
+    private TextView mContentText;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -110,9 +112,8 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         linearLayout = findViewById(R.id.fullscreen_content_controls);
 
         mContentView = findViewById(R.id.fullscreen_content);
-
+        mContentText = findViewById(R.id.fullscreen_content);
         // Set up the user interaction to manually show or hide the system UI.
-
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -208,7 +209,9 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
     }
 
     public void regenerateColorPicker(View view) {
-        System.out.println("regenerateColorPicker");
+
+        mContentText.setText("");
+
         cc = new ColorPickerDialog();
         ColorPickerDialog.newBuilder()
                 .setDialogType(ColorPickerDialog.TYPE_CUSTOM)

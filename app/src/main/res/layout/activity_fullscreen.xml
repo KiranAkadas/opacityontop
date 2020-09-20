@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    tools:context=".FullscreenActivity"
+    tools:context="com.bacloud.opacityontop.FullscreenActivity"
     android:id="@+id/main">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -17,8 +17,8 @@
         android:gravity="center"
         android:keepScreenOn="true"
         android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
         android:textStyle="bold" />
 
 
@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:orientation="horizontal"
+            android:background="@color/black_overlay"
             tools:ignore="UselessParent">
 
             <Button
@@ -46,6 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/dummy_button"
+                android:textColor="@color/md_white"
+                android:background="@drawable/button"
                 />
 
         </LinearLayout>

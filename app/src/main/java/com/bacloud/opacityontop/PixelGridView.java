@@ -1,4 +1,4 @@
-package com.bacloud.transparentruler;
+package com.bacloud.opacityontop;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -28,7 +28,7 @@ public class PixelGridView extends View {
     public PixelGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        blackPaint.setColor(Color.BLACK);
+        blackPaint.setColor(Color.WHITE);
     }
 
     public void setFragmentActivity(FragmentActivity fragmentActivity) {

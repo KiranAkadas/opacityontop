@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">freeze</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="app_name">Opacity on top</string>
+    <string name="dummy_button">Choose color</string>
+    <string name="dummy_content">Choose a color bellow\nThen swipe on screen to change again</string>
 
     <string name="action_settings">Settings</string>
-    <string name="color_picker_dialog">Color Picker Dialog</string>
+    <string name="color_picker_dialog">Color Picker</string>
     <string name="github">GitHub</string>
 </resources>
