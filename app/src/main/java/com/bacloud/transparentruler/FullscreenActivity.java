@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
  * status bar and navigation/system bar) with user interaction.
  */
 public class FullscreenActivity extends AppCompatActivity implements ColorPickerDialogListener {
+
     private static final String TAG = "FullscreenActivity";
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -39,7 +39,28 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
+    private static final int DIALOG_ID = 0;
     private final Handler mHideHandler = new Handler();
+    ColorPickerDialog cc;
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+
+
+    private final View.OnClickListener mDelayHideClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            regenerateColorPicker(v);
+        }
+
+    };
+    PixelGridView pixelGrid;
+    int color;
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -59,7 +80,6 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         }
     };
     private View mControlsView;
-    private LinearLayout linearLayout;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -68,9 +88,10 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
             if (actionBar != null) {
                 actionBar.show();
             }
-//            mControlsView.setVisibility(View.VISIBLE);
+            mControlsView.setVisibility(View.VISIBLE);
         }
     };
+    private LinearLayout linearLayout;
     private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -78,81 +99,33 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
             hide();
         }
     };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (AUTO_HIDE) {
-                        delayedHide(AUTO_HIDE_DELAY_MILLIS);
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    view.performClick();
-                    break;
-
-                default:
-                    break;
-            }
-            return false;
-        }
-    };
-    private static final int DIALOG_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen);
-        ColorPickerDialog.newBuilder()
-                .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
-                .setAllowPresets(false)
-                .setDialogId(DIALOG_ID)
-                .setColor(Color.BLACK)
-                .setShowAlphaSlider(true)
-                .show(this);
 
-        mVisible = true;
-//        mControlsView = findViewById(R.id.fullscreen_content_controls);
+        mControlsView = findViewById(R.id.fullscreen_content_controls);
         linearLayout = findViewById(R.id.fullscreen_content_controls);
 
         mContentView = findViewById(R.id.fullscreen_content);
 
         // Set up the user interaction to manually show or hide the system UI.
 
-//        mContentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggle();
-//            }
-//
-//        });
-
-        mContentView.setOnTouchListener(new View.OnTouchListener() {
+        mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
+            public void onClick(View view) {
                 toggle();
-                return false;
             }
+
         });
 
-//        MyView myView = new MyView(this);
-//        linearLayout.addView(myView);
-
-        PixelGridView pixelGrid = new PixelGridView(this);
-        pixelGrid.setNumColumns(4);
-        pixelGrid.setNumRows(6);
-        pixelGrid.invalidate();
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-//        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        findViewById(R.id.dummy_button).setOnClickListener(mDelayHideClickListener);
+
     }
 
     @Override
@@ -179,7 +152,7 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         if (actionBar != null) {
             actionBar.hide();
         }
-//        mControlsView.setVisibility(View.GONE);
+        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -208,9 +181,15 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
     }
 
     @Override
-    public void onColorSelected(int dialogId, int color) {
+    public void onColorSelected(int dialogId, int newColor) {
+        getSupportFragmentManager().beginTransaction().
+                remove(cc).commit();
+        this.toggle();
+        color = newColor;
         Log.d(TAG, "onColorSelected() called with: dialogId = [" + dialogId + "], color = [" + color + "]");
-        PixelGridView pixelGrid = new PixelGridView(this);
+
+        linearLayout.removeView(pixelGrid);
+        pixelGrid = new PixelGridView(this);
         pixelGrid.setNumColumns(4);
         pixelGrid.setNumRows(6);
         pixelGrid.setColorPicked(color);
@@ -227,4 +206,18 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
     public void onDialogDismissed(int dialogId) {
         Log.d(TAG, "onDialogDismissed() called with: dialogId = [" + dialogId + "]");
     }
+
+    public void regenerateColorPicker(View view) {
+        System.out.println("regenerateColorPicker");
+        cc = new ColorPickerDialog();
+        ColorPickerDialog.newBuilder()
+                .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
+                .setAllowPresets(false)
+                .setDialogId(DIALOG_ID)
+                .setColor(Color.BLACK)
+                .setShowAlphaSlider(true)
+                .show(this);
+
+    }
+
 }

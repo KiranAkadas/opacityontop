@@ -7,18 +7,19 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.FragmentActivity;
 
 
 public class PixelGridView extends View {
+    private static final int DIALOG_ID = 0;
+    FragmentActivity fragmentActivity;
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
     private Paint blackPaint = new Paint();
     private boolean[][] cellChecked;
     private int colorPicked = 0;
-
-    public void setColorPicked(int colorPicked) {
-        this.colorPicked = colorPicked;
-    }
 
     public PixelGridView(Context context) {
         this(context, null);
@@ -30,22 +31,30 @@ public class PixelGridView extends View {
         blackPaint.setColor(Color.BLACK);
     }
 
-    public void setNumColumns(int numColumns) {
-        this.numColumns = numColumns;
-        calculateDimensions();
+    public void setFragmentActivity(FragmentActivity fragmentActivity) {
+        this.fragmentActivity = fragmentActivity;
+    }
+
+    public void setColorPicked(int colorPicked) {
+        this.colorPicked = colorPicked;
     }
 
     public int getNumColumns() {
         return numColumns;
     }
 
-    public void setNumRows(int numRows) {
-        this.numRows = numRows;
+    public void setNumColumns(int numColumns) {
+        this.numColumns = numColumns;
         calculateDimensions();
     }
 
     public int getNumRows() {
         return numRows;
+    }
+
+    public void setNumRows(int numRows) {
+        this.numRows = numRows;
+        calculateDimensions();
     }
 
     @Override
@@ -101,6 +110,7 @@ public class PixelGridView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
@@ -109,13 +119,11 @@ public class PixelGridView extends View {
 
             invalidate();
         }
+
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            int column = (int) (event.getX() / cellWidth);
-            int row = (int) (event.getY() / cellHeight);
-
-            cellChecked[column][row] = !cellChecked[column][row];
-
-            invalidate();
+            ViewGroup parent = (ViewGroup) this.getParent();
+            parent.removeView(this);
+//            this.setVisibility(View.GONE);
         }
         return true;
     }

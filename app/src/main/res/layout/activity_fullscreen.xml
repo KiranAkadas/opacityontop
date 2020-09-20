@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    tools:context=".FullscreenActivity">
+    tools:context=".FullscreenActivity"
+    android:id="@+id/main">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -31,18 +32,21 @@
 
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
-<!--            <Button-->
-<!--                android:id="@+id/dummy_button"-->
-<!--                style="?metaButtonBarButtonStyle"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:text="@string/dummy_button" />-->
+            <Button
+                android:id="@+id/dummy_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dummy_button"
+                />
 
         </LinearLayout>
     </FrameLayout>
