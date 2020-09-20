@@ -1,6 +1,7 @@
 package com.bacloud.opacityontop;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,29 +42,12 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private static final int DIALOG_ID = 0;
+    private static final int REQUEST_OVERLAY_PERMISSION = 1;
     private final Handler mHideHandler = new Handler();
     ColorPickerDialog cc;
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-
-
-    private final View.OnClickListener mDelayHideClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            regenerateColorPicker(v);
-        }
-
-    };
     PixelGridView pixelGrid;
     int color;
     private View mContentView;
-    private TextView mContentText;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -81,6 +65,7 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
+    private TextView mContentText;
     private View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -100,6 +85,23 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         public void run() {
             hide();
         }
+    };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+
+
+    private final View.OnClickListener mDelayHideClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            regenerateColorPicker(v);
+        }
+
     };
 
     @Override
@@ -126,6 +128,40 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnClickListener(mDelayHideClickListener);
+
+        Intent intent = new Intent(FullscreenActivity.this, ShakeService.class);
+        startService(intent);
+//        ScreenshotDetector screenshotDetector =
+//                new ScreenshotDetector(this, new ScreenshotDetector.OnScreenshotTakenListener() {
+//                    @Override
+//                    public void onScreenshotTaken(Uri uri) {
+//                        System.out.println("wow"+uri.toString());
+//                    }
+//                    @Override
+//                    public void onScreenshotDeleted(Uri uri) {
+//                    }
+//                });
+//        screenshotDetector.start();
+//        if(!Settings.canDrawOverlays(this)){
+//            // ask for setting
+//            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+//                    Uri.parse("package:" + getPackageName()));
+//            startActivityForResult(intent, REQUEST_OVERLAY_PERMISSION);
+//        }
+
+//        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+//                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+//                PixelFormat.TRANSLUCENT);
+//
+//        WindowManager wm = (WindowManager) getApplicationContext()
+//                .getSystemService(Context.WINDOW_SERVICE);
+//
+//        ViewGroup mTopView = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_fullscreen, null);
+//        getWindow().setAttributes(params);
+//        wm.addView(mTopView, params);
 
     }
 
