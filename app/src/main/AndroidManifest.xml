@@ -26,7 +26,9 @@
             </intent-filter>
         </activity>
         <service android:name=".ShakeService" />
-        <receiver android:name=".OnBootReceiver" android:enabled="true" android:exported="true">
+        <receiver android:name=".OnBootReceiver"
+
+            >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />

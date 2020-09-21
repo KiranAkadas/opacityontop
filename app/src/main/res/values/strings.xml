@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Opacity on top</string>
+    <string name="app_name">Opacity on top [is running!]</string>
     <string name="dummy_button">Choose color</string>
     <string name="dummy_content">Choose a color below\nThen swipe on screen to change again</string>
 

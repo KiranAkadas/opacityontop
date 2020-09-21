@@ -108,10 +108,13 @@ public class PixelGridView extends View {
         }
     }
 
+    float x = 0,y = 0,x1 = 0 ,y1 = 0;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            x = event.getX();
+            y = event.getY();
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
 
@@ -121,12 +124,18 @@ public class PixelGridView extends View {
         }
 
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            ViewGroup parent = (ViewGroup) this.getParent();
-            parent.removeView(this);
-//            this.setVisibility(View.GONE);
+            x1 = event.getX();
+            y1 = event.getY();
+        }
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (Math.abs(y1 - y) > 200 || Math.abs(x1 - x) > 200) {        //pointer moved down (y = 0 is at the top of the screen)
+                ViewGroup parent = (ViewGroup) this.getParent();
+                parent.removeView(this);
+                this.setVisibility(View.GONE);
+            }
         }
         return true;
     }
-
 
 }
