@@ -1,17 +1,23 @@
 package com.bacloud.opacityontop;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
@@ -227,8 +233,8 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
 
         linearLayout.removeView(pixelGrid);
         pixelGrid = new PixelGridView(this);
-        pixelGrid.setNumColumns(4);
-        pixelGrid.setNumRows(6);
+        pixelGrid.setNumColumns(12);
+        pixelGrid.setNumRows(16);
         pixelGrid.setColorPicked(color);
         linearLayout.addView(pixelGrid);
         switch (dialogId) {
@@ -256,6 +262,25 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
                 .setColor(Color.BLACK)
                 .setShowAlphaSlider(true)
                 .show(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Number of columns (1 to 50)");
+        final EditText numCols = new EditText(this);
+        numCols.setInputType(InputType.TYPE_CLASS_NUMBER);
+        numCols.setRawInputType(Configuration.KEYBOARD_12KEY);
+        numCols.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "50")});
+        alert.setView(numCols);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                pixelGrid.setNumColumns(Integer.parseInt(numCols.getText().toString()));
+                pixelGrid.setNumRows(Integer.parseInt(numCols.getText().toString())*2);
+            }
+        });
+        alert.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //Put actions for CANCEL button here, or leave in blank
+            }
+        });
+        alert.show();
 
     }
 

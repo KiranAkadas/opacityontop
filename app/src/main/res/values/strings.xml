@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Opacity on top [is running!]</string>
     <string name="dummy_button">Choose color</string>
-    <string name="dummy_content">Choose a color below\nThen swipe on screen to change again</string>
+    <string name="dummy_content">Choose a color below\nThen swipe on screen to change again\nShake phone to restart on top</string>
 
     <string name="action_settings">Settings</string>
     <string name="color_picker_dialog">Color Picker</string>

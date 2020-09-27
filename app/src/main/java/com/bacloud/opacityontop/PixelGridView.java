@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 public class PixelGridView extends View {
     private static final int DIALOG_ID = 0;
     FragmentActivity fragmentActivity;
+    float x = 0, y = 0, x1 = 0, y1 = 0;
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
     private Paint blackPaint = new Paint();
@@ -108,7 +109,6 @@ public class PixelGridView extends View {
         }
     }
 
-    float x = 0,y = 0,x1 = 0 ,y1 = 0;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -129,7 +129,7 @@ public class PixelGridView extends View {
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (Math.abs(y1 - y) > 200 || Math.abs(x1 - x) > 200) {        //pointer moved down (y = 0 is at the top of the screen)
+            if (Math.abs(y1 - y) > 300 || Math.abs(x1 - x) > 300) {        //pointer moved down (y = 0 is at the top of the screen)
                 ViewGroup parent = (ViewGroup) this.getParent();
                 parent.removeView(this);
                 this.setVisibility(View.GONE);
