@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -72,6 +73,23 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         }
     };
     private TextView mContentText;
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+
+
+    private final View.OnClickListener mDelayHideClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            regenerateColorPicker(v);
+        }
+
+    };
     private View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -91,23 +109,6 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         public void run() {
             hide();
         }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-
-
-    private final View.OnClickListener mDelayHideClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            regenerateColorPicker(v);
-        }
-
     };
 
     @Override
@@ -267,12 +268,17 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
         final EditText numCols = new EditText(this);
         numCols.setInputType(InputType.TYPE_CLASS_NUMBER);
         numCols.setRawInputType(Configuration.KEYBOARD_12KEY);
-        numCols.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "50")});
+        numCols.setFilters(new InputFilter[]{new InputFilterMinMax("1", "50")});
         alert.setView(numCols);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                pixelGrid.setNumColumns(Integer.parseInt(numCols.getText().toString()));
-                pixelGrid.setNumRows(Integer.parseInt(numCols.getText().toString())*2);
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+                int width = displayMetrics.widthPixels;
+                int numCols_ = Integer.parseInt(numCols.getText().toString());
+                pixelGrid.setNumColumns(numCols_);
+                pixelGrid.setNumRows((int) (((double) height / width) * numCols_));
             }
         });
         alert.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -281,7 +287,6 @@ public class FullscreenActivity extends AppCompatActivity implements ColorPicker
             }
         });
         alert.show();
-
     }
 
 }

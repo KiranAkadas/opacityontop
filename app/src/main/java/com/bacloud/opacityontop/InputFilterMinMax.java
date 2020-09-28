@@ -20,7 +20,6 @@ public class InputFilterMinMax implements InputFilter {
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
         try {
-
             // Using @Zac's initial solution
             String lastVal = dest.toString().substring(0, dstart) + dest.toString().substring(dend);
             String newVal = lastVal.substring(0, dstart) + source.toString() + lastVal.substring(dstart);

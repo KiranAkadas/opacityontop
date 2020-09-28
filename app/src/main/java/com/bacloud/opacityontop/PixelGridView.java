@@ -111,12 +111,17 @@ public class PixelGridView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        System.out.println(cellChecked.length + "---" + cellChecked[0].length);
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
             x = event.getX();
             y = event.getY();
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
+
+            if (column > 0 && column == numColumns)
+                column -= 1;
+            if (row > 0 && row == numRows)
+                row -= 1;
 
             cellChecked[column][row] = !cellChecked[column][row];
 
@@ -129,7 +134,7 @@ public class PixelGridView extends View {
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (Math.abs(y1 - y) > 300 || Math.abs(x1 - x) > 300) {        //pointer moved down (y = 0 is at the top of the screen)
+            if (Math.abs(y1 - y) > 100 || Math.abs(x1 - x) > 100) {        //pointer moved down (y = 0 is at the top of the screen)
                 ViewGroup parent = (ViewGroup) this.getParent();
                 parent.removeView(this);
                 this.setVisibility(View.GONE);
